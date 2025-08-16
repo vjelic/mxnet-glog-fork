@@ -1,0 +1,752 @@
+{
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "Glog.AI",
+          "organization": "Glog.AI",
+          "fullName": "Glog, Making software more secure",
+          "version": "1.0.0",
+          "semanticVersion": "1.0.0",
+          "informationUri": "https://www.glog.ai",
+          "rules": [
+            {
+              "id": "glog-663abf48-3fc1-46cb-8f3b-647ec2cd8157",
+              "help": {
+                "text": "",
+                "markdown": "## Description\n\nThe vulnerability in question is related to the `memcpy` function in C++. This function is used to copy a block of memory from one location to another. The problem arises when the size of the destination buffer is less than the size of the source buffer. This can lead to buffer overflow, which is a serious security vulnerability as it can allow an attacker to execute arbitrary code or cause a denial of service.\n\n## Mitigation Advice\n\nTo mitigate this vulnerability, it is recommended to always ensure that the destination buffer is large enough to hold the data being copied. This can be done by checking the size of the source and destination buffers before calling `memcpy`. Additionally, consider using safer functions that include buffer size checks, such as `strncpy` or `memcpy_s` (in C11).\n\n## Source Code Fix Recommendation\n\nHere is a possible fix for the provided code:\n\n```cpp\nsize_t size = in_data.ndim() * sizeof(*in_data.shape_.data());\nif (size <= sizeof(out_data.dptr_)) {\n    memcpy(out_data.dptr_, in_data.shape_.data(), size);\n} else {\n    // Handle error\n}\n```\n\nIn this code, we calculate the size of the data to be copied and check if it fits into the destination buffer before calling `memcpy`.\n\n## Library Dependencies\n\nThe code example seems to be using a custom data structure, so it's hard to determine the exact library dependencies without more context. However, the `memcpy` function is part of the C standard library, so no additional libraries are needed for it.\n\n## OWASP and CWE Links\n\n- [OWASP C++ Secure Coding Practices](https://cheatsheetseries.owasp.org/cheatsheets/C-Based_Toolchain_Hardening_Cheat_Sheet.html)\n- [CWE-120: Buffer Copy without Checking Size of Input ('Classic Buffer Overflow')](https://cwe.mitre.org/data/definitions/120.html)\n\nPlease note that these links are subject to change and may not always be accessible. Always refer to the latest resources from OWASP and CWE for up-to-date information."
+              },
+              "properties": {
+                "tags": [
+                  "DS121708"
+                ]
+              }
+            },
+            {
+              "id": "glog-69e194cc-6c91-4019-9eb2-9ff8ea893c94",
+              "help": {
+                "text": "",
+                "markdown": "## Description\n\nThe vulnerability in question is a buffer overflow vulnerability that can occur in the `memcpy` function in C++. This function is used to copy a block of memory from one location to another. If the destination buffer is smaller than the source buffer, it can lead to a buffer overflow, which can cause a program to crash or, in some cases, allow an attacker to execute arbitrary code.\n\n## Mitigation Advice\n\nTo mitigate this vulnerability, you should always ensure that the destination buffer is large enough to hold the data being copied from the source buffer. This can be done by checking the size of the destination buffer before calling `memcpy`.\n\n## Source Code Fix Recommendation\n\nHere is a fixed version of the code:\n\n```cpp\nsize_t size = M * sizeof(DType);\nif (size <= sizeof(out_data) - i * M) {\n    memcpy(out_data + i * M, in_data + j * M, size);\n} else {\n    // Handle error: destination buffer is too small\n}\n```\n\nIn this version of the code, we first calculate the size of the data being copied. Then we check if the destination buffer (`out_data`) has enough space to hold this data. If it does, we proceed with the `memcpy`. If it doesn't, we handle the error in an appropriate way.\n\n## Library Dependencies\n\nThe code example requires the following library to execute properly:\n\n- `<cstring>`: This library provides the `memcpy` function.\n\n## OWASP and CWE Links\n\n- [OWASP Buffer Overflow](https://owasp.org/www-community/vulnerabilities/Buffer_Overflow)\n- [CWE-120: Buffer Copy without Checking Size of Input ('Classic Buffer Overflow')](https://cwe.mitre.org/data/definitions/120.html)"
+              },
+              "properties": {
+                "tags": [
+                  "DS121708"
+                ]
+              }
+            },
+            {
+              "id": "glog-d2f91702-805f-4098-b563-7830f75fe4c2",
+              "help": {
+                "text": "",
+                "markdown": "## Description\n\nThe vulnerability in question is related to the `memcpy` function in C++. This function is used to copy a block of memory from one location to another. The vulnerability arises when the size of the destination buffer is less than the size of the source buffer. This can lead to buffer overflow, which can cause the program to crash or, in worst-case scenarios, allow an attacker to execute arbitrary code.\n\n## Mitigation Advice\n\nTo mitigate this vulnerability, it is recommended to always ensure that the destination buffer is large enough to hold the data being copied from the source buffer. This can be done by checking the size of the destination buffer before calling `memcpy`.\n\nAdditionally, consider using safer alternatives to `memcpy`, such as `strncpy` or `memcpy_s` (in C11), which include a length parameter to prevent buffer overflow.\n\n## Source Code Fix Recommendation\n\nHere is a fixed version of the code:\n\n```cpp\nif (inputs[0].Size() <= sizeof(outputs[0].dptr_)) {\n    memcpy(outputs[0].dptr_, inputs[0].dptr_, inputs[0].Size());\n} else {\n    // Handle error\n}\n```\n\nIn this version, we first check if the size of the source buffer is less than or equal to the size of the destination buffer before calling `memcpy`.\n\n## Library Dependencies\n\nThe `memcpy` function is part of the C Standard Library, so no additional libraries are needed for this code to execute properly.\n\n## OWASP and CWE Links\n\n- [OWASP C++ Secure Coding Practices](https://cheatsheetseries.owasp.org/cheatsheets/C-Based_Toolchain_Hardening_Cheat_Sheet.html)\n- [CWE-120: Buffer Copy without Checking Size of Input ('Classic Buffer Overflow')](https://cwe.mitre.org/data/definitions/120.html)\n\nPlease note that these links are subject to change and may not always be accessible."
+              },
+              "properties": {
+                "tags": [
+                  "DS121708"
+                ]
+              }
+            },
+            {
+              "id": "glog-d5c82d90-02ce-409e-aaf0-b6beee1848df",
+              "help": {
+                "text": "",
+                "markdown": "### Description\n\nIn C++ programming, using weak or non-cryptographic random number generators can lead to vulnerabilities, especially in security-sensitive applications. Functions like `rand()` from the C standard library are not suitable for cryptographic purposes because they produce predictable sequences of numbers. This predictability can be exploited by attackers to compromise the security of the application.\n\n### General Mitigation Advice\n\nTo mitigate this vulnerability, use a cryptographically secure random number generator. In C++, the `<random>` library provides better alternatives, but for cryptographic purposes, consider using libraries like OpenSSL or libsodium that offer cryptographically secure random number generation.\n\n### Source Code Fix Recommendation\n\n#### Vulnerable Code\n\n```cpp\n#include <algorithm>\n#include <vector>\n#include <cstdlib> // For rand()\n\nvoid shuffleVector(std::vector<int>& vec) {\n    std::random_shuffle(vec.begin(), vec.end());\n}\n```\n\n#### Fixed Code\n\n```cpp\n#include <algorithm>\n#include <vector>\n#include <random> // For std::random_device and std::mt19937\n\nvoid shuffleVector(std::vector<int>& vec) {\n    std::random_device rd;\n    std::mt19937 g(rd());\n    std::shuffle(vec.begin(), vec.end(), g);\n}\n```\n\n### Library Dependencies\n\n- `<algorithm>`: Required for `std::shuffle`.\n- `<vector>`: Required for using `std::vector`.\n- `<random>`: Required for `std::random_device` and `std::mt19937`.\n\n### OWASP Resources\n\n- [OWASP Cryptographic Storage Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html)\n\n### Common Weakness Enumeration (CWE)\n\n- [CWE-338: Use of Cryptographically Weak Pseudo-Random Number Generator (PRNG)](https://cwe.mitre.org/data/definitions/338.html)"
+              },
+              "properties": {
+                "tags": [
+                  "DS148264"
+                ]
+              }
+            },
+            {
+              "id": "glog-c9201502-0274-4ceb-b113-a22ea8b0c318",
+              "help": {
+                "text": "",
+                "markdown": "## Description\n\nThe `memcpy` function in C++ is used to copy a block of memory from one location to another. This function is vulnerable to buffer overflow attacks if the size of the data being copied is larger than the size of the destination buffer. In the provided code snippet, `memcpy(out_data.dptr_, &size_var, type_size)`, if `type_size` is larger than the size of `out_data.dptr_`, it can lead to a buffer overflow.\n\nBuffer overflow vulnerabilities can lead to various security issues such as data corruption, system crashes, and unauthorized code execution.\n\n## Mitigation Advice\n\nTo mitigate this vulnerability, you should always ensure that the destination buffer is large enough to hold the data being copied. This can be done by checking the size of the destination buffer and the size of the source data before calling `memcpy`.\n\n## Source Code Fix Recommendation\n\nHere is a recommended fix for the provided code snippet:\n\n```cpp\nif (type_size <= sizeof(out_data.dptr_)) {\n    memcpy(out_data.dptr_, &size_var, type_size);\n} else {\n    // Handle error\n}\n```\n\nIn this fix, we check if `type_size` is less than or equal to the size of `out_data.dptr_` before calling `memcpy`. If `type_size` is larger, we handle the error instead of calling `memcpy`.\n\n## Library Dependencies\n\nThe `memcpy` function is part of the C Standard Library, so you need to include the `cstring` header file to use it:\n\n```cpp\n#include <cstring>\n```\n\n## OWASP Resources\n\n- [Buffer Overflow](https://owasp.org/www-community/vulnerabilities/Buffer_Overflow)\n\n## Common Weakness Enumeration (CWE)\n\n- [CWE-120: Buffer Copy without Checking Size of Input ('Classic Buffer Overflow')](https://cwe.mitre.org/data/definitions/120.html)"
+              },
+              "properties": {
+                "tags": [
+                  "DS121708"
+                ]
+              }
+            },
+            {
+              "id": "glog-623152df-bc44-42cd-9605-9518a3e5066a",
+              "help": {
+                "text": "",
+                "markdown": "## Description\n\n\"Unsecured Web Address\" vulnerability refers to the use of unencrypted HTTP protocol for communication between the client and the server. This can lead to Man-in-the-Middle (MitM) attacks where an attacker can intercept the communication and gain access to sensitive information. In C++ programming, this vulnerability can occur when libraries or functions that perform HTTP requests are used without SSL/TLS encryption.\n\n## Mitigation Advice\n\nTo mitigate this vulnerability, always use HTTPS (HTTP Secure) instead of HTTP when making requests to a server. HTTPS ensures that the communication between the client and the server is encrypted using SSL/TLS protocols, making it difficult for attackers to intercept the communication.\n\n## Source Code Fix Recommendation\n\nThe specific vulnerability sink in this case is the URL \"http://mxnet.io\". To fix this, simply change the URL to use HTTPS:\n\n```cpp\nstd::string url = \"https://mxnet.io\";\n```\n\n## Library Dependencies\n\nThe specific library dependencies required by the code example will depend on the libraries used to make the HTTP request. For example, if you're using the `curl` library, you will need to have `libcurl` installed.\n\n## OWASP Resources\n\n- [OWASP Top 10-2017 A6-Security Misconfiguration](https://owasp.org/www-project-top-ten/2017/A6_2017-Security_Misconfiguration)\n\n## Common Weakness Enumeration (CWE)\n\n- [CWE-319: Cleartext Transmission of Sensitive Information](https://cwe.mitre.org/data/definitions/319.html)"
+              },
+              "properties": {
+                "tags": [
+                  "DS137138"
+                ]
+              }
+            },
+            {
+              "id": "glog-d2250965-8eed-43c2-bc19-fcd67833bcf0",
+              "help": {
+                "text": "",
+                "markdown": "## Description\n\nThe vulnerability in question is related to the `memcpy` function in C++. This function is used to copy a block of memory from one location to another. The vulnerability arises when the size of the destination buffer is less than the size of the source buffer. This can lead to buffer overflow, which can cause the program to crash or, in worst-case scenarios, allow an attacker to execute arbitrary code.\n\n## Mitigation Advice\n\nTo mitigate this vulnerability, it is recommended to always ensure that the destination buffer is large enough to hold the data being copied from the source buffer. This can be done by checking the size of the destination buffer before calling `memcpy`.\n\nAdditionally, consider using safer alternatives to `memcpy`, such as `strncpy` or `memcpy_s` (in C11), which include a length parameter to prevent buffer overflow.\n\n## Source Code Fix Recommendation\n\nHere is a fixed version of the code:\n\n```cpp\nif (inputs[0].Size() <= sizeof(outputs[0].dptr_)) {\n    memcpy(outputs[0].dptr_, inputs[0].dptr_, inputs[0].Size());\n} else {\n    // Handle error\n}\n```\n\nIn this version, we first check if the size of the source buffer is less than or equal to the size of the destination buffer before calling `memcpy`.\n\n## Library Dependencies\n\nThe `memcpy` function is part of the C Standard Library, so no additional libraries are needed for this code to execute properly.\n\n## OWASP and CWE Links\n\n- [OWASP C++ Secure Coding Practices](https://cheatsheetseries.owasp.org/cheatsheets/C-Based_Toolchain_Hardening_Cheat_Sheet.html)\n- [CWE-120: Buffer Copy without Checking Size of Input ('Classic Buffer Overflow')](https://cwe.mitre.org/data/definitions/120.html)\n\nPlease note that these links are subject to change and may not always be accessible."
+              },
+              "properties": {
+                "tags": [
+                  "DS121708"
+                ]
+              }
+            },
+            {
+              "id": "glog-03b8ee9e-7e56-42fc-8530-cfb5e41944a2",
+              "help": {
+                "text": "",
+                "markdown": "## Description\n\nAn \"Unsecured URL\" vulnerability in C++ programming language refers to the situation where a program uses an unsecured HTTP URL for communication, instead of a secured HTTPS URL. This can lead to a variety of security issues, such as Man-in-the-Middle (MitM) attacks, where an attacker can intercept and potentially alter the communication between the client and the server.\n\n## Mitigation Advice\n\nTo mitigate this vulnerability, always use secure HTTPS URLs for communication. HTTPS encrypts the data sent between the client and the server, making it much more difficult for an attacker to intercept or alter the communication.\n\n## Source Code Fix Recommendation\n\nIf you are using the `curl` library to make HTTP requests, you can simply replace the unsecured HTTP URL with a secured HTTPS URL. For example, if your code looks like this:\n\n```cpp\n#include <curl/curl.h>\n\nint main() {\n    CURL *curl;\n    CURLcode res;\n\n    curl_global_init(CURL_GLOBAL_DEFAULT);\n\n    curl = curl_easy_init();\n    if(curl) {\n        curl_easy_setopt(curl, CURLOPT_URL, \"http://www.apache.org\");\n        /* Perform the request, res will get the return code */\n        res = curl_easy_perform(curl);\n        /* Check for errors */\n        if(res != CURLE_OK)\n            fprintf(stderr, \"curl_easy_perform() failed: %s\\n\",\n                    curl_easy_strerror(res));\n        /* always cleanup */\n        curl_easy_cleanup(curl);\n    }\n\n    curl_global_cleanup();\n\n    return 0;\n}\n```\n\nYou can fix the vulnerability by changing the URL to \"https://www.apache.org\":\n\n```cpp\n#include <curl/curl.h>\n\nint main() {\n    CURL *curl;\n    CURLcode res;\n\n    curl_global_init(CURL_GLOBAL_DEFAULT);\n\n    curl = curl_easy_init();\n    if(curl) {\n        curl_easy_setopt(curl, CURLOPT_URL, \"https://www.apache.org\");\n        /* Perform the request, res will get the return code */\n        res = curl_easy_perform(curl);\n        /* Check for errors */\n        if(res != CURLE_OK)\n            fprintf(stderr, \"curl_easy_perform() failed: %s\\n\",\n                    curl_easy_strerror(res));\n        /* always cleanup */\n        curl_easy_cleanup(curl);\n    }\n\n    curl_global_cleanup();\n\n    return 0;\n}\n```\n\n## Library Dependencies\n\nThe above code example requires the `libcurl` library.\n\n## OWASP Resources\n\n- [OWASP Top 10 2017 Category A6 - Security Misconfiguration](https://owasp.org/www-project-top-ten/2017/A6_2017-Security_Misconfiguration)\n\n## Common Weakness Enumeration (CWE)\n"
+              },
+              "properties": {
+                "tags": [
+                  "DS137138"
+                ]
+              }
+            },
+            {
+              "id": "glog-f1955b9c-2274-4649-930d-e17f7450e6e0",
+              "help": {
+                "text": "",
+                "markdown": "## Description\n\nAn \"Unsecured Web Address\" vulnerability refers to the use of non-secure HTTP protocol for communication between the client and the server. This can lead to a potential risk where an attacker can intercept the communication and gain unauthorized access to sensitive information. In C++ programming, this vulnerability can occur when a web address (URL) is hardcoded into the application using the insecure HTTP protocol instead of the secure HTTPS protocol.\n\n## Mitigation Advice\n\nTo mitigate this vulnerability, always use secure communication protocols like HTTPS for any form of data exchange between the client and the server. HTTPS ensures that the data is encrypted and cannot be easily intercepted by attackers. Avoid hardcoding URLs into your application, especially if they use insecure protocols. If a URL must be hardcoded, make sure it uses HTTPS.\n\n## Source Code Fix Recommendation\n\nThe specific vulnerability sink in this case is the URL \"http://www.jmlr.org\". To fix this, simply change the protocol from HTTP to HTTPS:\n\n```cpp\nstd::string url = \"https://www.jmlr.org\";\n```\n\n## Library Dependencies\n\nThe code example provided does not require any specific library dependencies to execute properly.\n\n## OWASP Resources\n\n- [OWASP Secure Coding Practices](https://owasp.org/www-project-secure-coding-practices-quick-reference-guide/)\n- [OWASP Top 10 2017: A6-Security Misconfiguration](https://owasp.org/www-project-top-ten/2017/A6_2017-Security_Misconfiguration)\n\n## Common Weakness Enumeration (CWE)\n\n- [CWE-319: Cleartext Transmission of Sensitive Information](https://cwe.mitre.org/data/definitions/319.html)"
+              },
+              "properties": {
+                "tags": [
+                  "DS137138"
+                ]
+              }
+            },
+            {
+              "id": "glog-95127da1-58c5-46fa-a81f-4a58defa1938",
+              "help": {
+                "text": "",
+                "markdown": "### Description\n\nIn C++ programming, using weak or non-cryptographic random number generators, such as the `rand()` function, can lead to vulnerabilities, especially in security-sensitive applications. The `rand()` function is not suitable for cryptographic purposes because it generates predictable sequences of numbers if the seed is known. This predictability can be exploited by attackers to compromise the security of the application.\n\n### General Mitigation Advice\n\nTo mitigate this vulnerability, use a cryptographically secure random number generator. In C++, the `<random>` library provides better alternatives, such as `std::random_device` and `std::mt19937`, which can be used to generate random numbers more securely.\n\n### Source Code Fix Recommendation\n\nReplace the use of `rand()` with a more secure random number generator from the `<random>` library. Here is an example of how to do this:\n\n```cpp\n#include <iostream>\n#include <random>\n\nint main() {\n    // Create a random device and a Mersenne Twister random number generator\n    std::random_device rd;\n    std::mt19937 gen(rd());\n\n    // Define a distribution range\n    std::uniform_int_distribution<> dis(1, 100);\n\n    // Generate a random number\n    int random_number = dis(gen);\n\n    std::cout << \"Secure random number: \" << random_number << std::endl;\n\n    return 0;\n}\n```\n\n### Library Dependencies\n\nTo execute the above code example properly, the following library is required:\n\n- `<random>`: This library provides facilities for generating random numbers.\n\n### OWASP Resources\n\n- [OWASP Cryptographic Storage Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html)\n\n### Common Weakness Enumeration (CWE)\n\n- [CWE-338: Use of Cryptographically Weak Pseudo-Random Number Generator (PRNG)](https://cwe.mitre.org/data/definitions/338.html)"
+              },
+              "properties": {
+                "tags": [
+                  "DS148264"
+                ]
+              }
+            }
+          ],
+          "language": "en-US",
+          "contents": [
+            "localizedData",
+            "nonLocalizedData"
+          ],
+          "isComprehensive": false
+        }
+      },
+      "language": "en-US",
+      "results": [
+        {
+          "ruleId": "glog-663abf48-3fc1-46cb-8f3b-647ec2cd8157",
+          "kind": "fail",
+          "level": "note",
+          "message": {
+            "text": "Detected Vulnerability in C Function (memcpy)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/operator/tensor/elemwise_unary_op_basic.cc"
+                },
+                "region": {
+                  "startLine": 496,
+                  "startColumn": 2,
+                  "endLine": 496,
+                  "endColumn": 62,
+                  "charOffset": 19675,
+                  "charLength": 60,
+                  "snippet": {
+                    "text": "memcpy(out_data.dptr_, in_data.shape_.data(), in_data.ndim()",
+                    "rendered": {
+                      "text": "memcpy(out_data.dptr_, in_data.shape_.data(), in_data.ndim()",
+                      "markdown": "`memcpy(out_data.dptr_, in_data.shape_.data(), in_data.ndim()`"
+                    }
+                  },
+                  "sourceLanguage": "cpp"
+                }
+              }
+            }
+          ],
+          "fixes": [
+            {
+              "description": {
+                "text": "There are a number of conditions in which memcpy can introduce a vulnerability (mismatched buffer sizes, null pointers, etc.). More secure alternitives perform additional validation of the source and destination buffer"
+              },
+              "artifactChanges": [
+                {
+                  "artifactLocation": {
+                    "uri": "src/operator/tensor/elemwise_unary_op_basic.cc"
+                  },
+                  "replacements": [
+                    {
+                      "deletedRegion": {
+                        "charOffset": 19675,
+                        "charLength": 60
+                      },
+                      "insertedContent": {
+                        "text": "memcpy_s(out_data.dptr_, <size of out_data.dptr_>,  in_data.shape_.data(),  in_data.ndim()"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "DevSkimSeverity": "BestPractice",
+            "DevSkimConfidence": "High",
+            "tags": [
+              "API.DangerousAPI.ProblematicFunction"
+            ]
+          }
+        },
+        {
+          "ruleId": "glog-69e194cc-6c91-4019-9eb2-9ff8ea893c94",
+          "kind": "fail",
+          "level": "note",
+          "message": {
+            "text": "Detected Vulnerability in C Function (memcpy)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/operator/tensor/indexing_op.cc"
+                },
+                "region": {
+                  "startLine": 49,
+                  "startColumn": 9,
+                  "endLine": 49,
+                  "endColumn": 68,
+                  "charOffset": 1750,
+                  "charLength": 59,
+                  "snippet": {
+                    "text": "memcpy(out_data + i * M, in_data + j * M, M * sizeof(DType)",
+                    "rendered": {
+                      "text": "memcpy(out_data + i * M, in_data + j * M, M * sizeof(DType)",
+                      "markdown": "`memcpy(out_data + i * M, in_data + j * M, M * sizeof(DType)`"
+                    }
+                  },
+                  "sourceLanguage": "cpp"
+                }
+              }
+            }
+          ],
+          "fixes": [
+            {
+              "description": {
+                "text": "There are a number of conditions in which memcpy can introduce a vulnerability (mismatched buffer sizes, null pointers, etc.). More secure alternitives perform additional validation of the source and destination buffer"
+              },
+              "artifactChanges": [
+                {
+                  "artifactLocation": {
+                    "uri": "src/operator/tensor/indexing_op.cc"
+                  },
+                  "replacements": [
+                    {
+                      "deletedRegion": {
+                        "charOffset": 1750,
+                        "charLength": 59
+                      },
+                      "insertedContent": {
+                        "text": "memcpy_s(out_data + i * M, <size of out_data + i * M>,  in_data + j * M,  M * sizeof(DType)"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "DevSkimSeverity": "BestPractice",
+            "DevSkimConfidence": "High",
+            "tags": [
+              "API.DangerousAPI.ProblematicFunction"
+            ]
+          }
+        },
+        {
+          "ruleId": "glog-d2f91702-805f-4098-b563-7830f75fe4c2",
+          "kind": "fail",
+          "level": "note",
+          "message": {
+            "text": "Detected Vulnerability in C Function (memcpy)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/operator/image/image_random-inl.h"
+                },
+                "region": {
+                  "startLine": 250,
+                  "startColumn": 13,
+                  "endLine": 250,
+                  "endColumn": 71,
+                  "charOffset": 8783,
+                  "charLength": 58,
+                  "snippet": {
+                    "text": "memcpy(outputs[0].dptr_, inputs[0].dptr_, inputs[0].Size()",
+                    "rendered": {
+                      "text": "memcpy(outputs[0].dptr_, inputs[0].dptr_, inputs[0].Size()",
+                      "markdown": "`memcpy(outputs[0].dptr_, inputs[0].dptr_, inputs[0].Size()`"
+                    }
+                  },
+                  "sourceLanguage": "c"
+                }
+              }
+            }
+          ],
+          "fixes": [
+            {
+              "description": {
+                "text": "There are a number of conditions in which memcpy can introduce a vulnerability (mismatched buffer sizes, null pointers, etc.). More secure alternitives perform additional validation of the source and destination buffer"
+              },
+              "artifactChanges": [
+                {
+                  "artifactLocation": {
+                    "uri": "src/operator/image/image_random-inl.h"
+                  },
+                  "replacements": [
+                    {
+                      "deletedRegion": {
+                        "charOffset": 8783,
+                        "charLength": 58
+                      },
+                      "insertedContent": {
+                        "text": "memcpy_s(outputs[0].dptr_, <size of outputs[0].dptr_>,  inputs[0].dptr_,  inputs[0].Size()"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "DevSkimSeverity": "BestPractice",
+            "DevSkimConfidence": "High",
+            "tags": [
+              "API.DangerousAPI.ProblematicFunction"
+            ]
+          }
+        },
+        {
+          "ruleId": "glog-d5c82d90-02ce-409e-aaf0-b6beee1848df",
+          "kind": "fail",
+          "level": "error",
+          "message": {
+            "text": "Avoid Using Weak or Non-Cryptographic Random Number Generators"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/operator/image/image_random-inl.h"
+                },
+                "region": {
+                  "startLine": 568,
+                  "startColumn": 7,
+                  "endLine": 568,
+                  "endColumn": 15,
+                  "charOffset": 19048,
+                  "charLength": 8,
+                  "snippet": {
+                    "text": "shuffle(",
+                    "rendered": {
+                      "text": "shuffle(",
+                      "markdown": "`shuffle(`"
+                    }
+                  },
+                  "sourceLanguage": "c"
+                }
+              }
+            }
+          ],
+          "properties": {
+            "DevSkimSeverity": "Important",
+            "DevSkimConfidence": "High",
+            "tags": [
+              "Cryptography.PRNG.Weak"
+            ]
+          }
+        },
+        {
+          "ruleId": "glog-c9201502-0274-4ceb-b113-a22ea8b0c318",
+          "kind": "fail",
+          "level": "note",
+          "message": {
+            "text": "Detected Vulnerability in C Function (memcpy)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/operator/tensor/elemwise_unary_op_basic.cc"
+                },
+                "region": {
+                  "startLine": 548,
+                  "startColumn": 2,
+                  "endLine": 548,
+                  "endColumn": 46,
+                  "charOffset": 21503,
+                  "charLength": 44,
+                  "snippet": {
+                    "text": "memcpy(out_data.dptr_, &size_var, type_size)",
+                    "rendered": {
+                      "text": "memcpy(out_data.dptr_, &size_var, type_size)",
+                      "markdown": "`memcpy(out_data.dptr_, &size_var, type_size)`"
+                    }
+                  },
+                  "sourceLanguage": "cpp"
+                }
+              }
+            }
+          ],
+          "fixes": [
+            {
+              "description": {
+                "text": "There are a number of conditions in which memcpy can introduce a vulnerability (mismatched buffer sizes, null pointers, etc.). More secure alternitives perform additional validation of the source and destination buffer"
+              },
+              "artifactChanges": [
+                {
+                  "artifactLocation": {
+                    "uri": "src/operator/tensor/elemwise_unary_op_basic.cc"
+                  },
+                  "replacements": [
+                    {
+                      "deletedRegion": {
+                        "charOffset": 21503,
+                        "charLength": 44
+                      },
+                      "insertedContent": {
+                        "text": "memcpy_s(out_data.dptr_, <size of out_data.dptr_>,  &size_var,  type_size)"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "DevSkimSeverity": "BestPractice",
+            "DevSkimConfidence": "High",
+            "tags": [
+              "API.DangerousAPI.ProblematicFunction"
+            ]
+          }
+        },
+        {
+          "ruleId": "glog-623152df-bc44-42cd-9605-9518a3e5066a",
+          "kind": "fail",
+          "level": "warning",
+          "message": {
+            "text": "Unsecured Web Address"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/operator/custom/custom.cc"
+                },
+                "region": {
+                  "startLine": 545,
+                  "startColumn": 32,
+                  "endLine": 545,
+                  "endColumn": 47,
+                  "charOffset": 19046,
+                  "charLength": 15,
+                  "snippet": {
+                    "text": "http://mxnet.io",
+                    "rendered": {
+                      "text": "http://mxnet.io",
+                      "markdown": "`http://mxnet.io`"
+                    }
+                  },
+                  "sourceLanguage": "cpp"
+                }
+              }
+            }
+          ],
+          "fixes": [
+            {
+              "description": {
+                "text": "An HTTP-based URL without TLS was detected."
+              },
+              "artifactChanges": [
+                {
+                  "artifactLocation": {
+                    "uri": "src/operator/custom/custom.cc"
+                  },
+                  "replacements": [
+                    {
+                      "deletedRegion": {
+                        "charOffset": 19046,
+                        "charLength": 15
+                      },
+                      "insertedContent": {
+                        "text": "https://mxnet.io"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "DevSkimSeverity": "Moderate",
+            "DevSkimConfidence": "High",
+            "tags": [
+              "ThreatModel.Integration.HTTP"
+            ]
+          }
+        },
+        {
+          "ruleId": "glog-d2250965-8eed-43c2-bc19-fcd67833bcf0",
+          "kind": "fail",
+          "level": "note",
+          "message": {
+            "text": "Detected Vulnerability in C Function (memcpy)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/operator/image/image_random-inl.h"
+                },
+                "region": {
+                  "startLine": 229,
+                  "startColumn": 13,
+                  "endLine": 229,
+                  "endColumn": 71,
+                  "charOffset": 8032,
+                  "charLength": 58,
+                  "snippet": {
+                    "text": "memcpy(outputs[0].dptr_, inputs[0].dptr_, inputs[0].Size()",
+                    "rendered": {
+                      "text": "memcpy(outputs[0].dptr_, inputs[0].dptr_, inputs[0].Size()",
+                      "markdown": "`memcpy(outputs[0].dptr_, inputs[0].dptr_, inputs[0].Size()`"
+                    }
+                  },
+                  "sourceLanguage": "c"
+                }
+              }
+            }
+          ],
+          "fixes": [
+            {
+              "description": {
+                "text": "There are a number of conditions in which memcpy can introduce a vulnerability (mismatched buffer sizes, null pointers, etc.). More secure alternitives perform additional validation of the source and destination buffer"
+              },
+              "artifactChanges": [
+                {
+                  "artifactLocation": {
+                    "uri": "src/operator/image/image_random-inl.h"
+                  },
+                  "replacements": [
+                    {
+                      "deletedRegion": {
+                        "charOffset": 8032,
+                        "charLength": 58
+                      },
+                      "insertedContent": {
+                        "text": "memcpy_s(outputs[0].dptr_, <size of outputs[0].dptr_>,  inputs[0].dptr_,  inputs[0].Size()"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "DevSkimSeverity": "BestPractice",
+            "DevSkimConfidence": "High",
+            "tags": [
+              "API.DangerousAPI.ProblematicFunction"
+            ]
+          }
+        },
+        {
+          "ruleId": "glog-03b8ee9e-7e56-42fc-8530-cfb5e41944a2",
+          "kind": "fail",
+          "level": "warning",
+          "message": {
+            "text": "Unsecured URL"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "matlab/+mxnet/private/parse_json.m"
+                },
+                "region": {
+                  "startLine": 9,
+                  "startColumn": 4,
+                  "endLine": 9,
+                  "endColumn": 25,
+                  "charOffset": 421,
+                  "charLength": 21,
+                  "snippet": {
+                    "text": "http://www.apache.org",
+                    "rendered": {
+                      "text": "http://www.apache.org",
+                      "markdown": "`http://www.apache.org`"
+                    }
+                  },
+                  "sourceLanguage": "objective-c"
+                }
+              }
+            }
+          ],
+          "fixes": [
+            {
+              "description": {
+                "text": "An HTTP-based URL without TLS was detected."
+              },
+              "artifactChanges": [
+                {
+                  "artifactLocation": {
+                    "uri": "matlab/+mxnet/private/parse_json.m"
+                  },
+                  "replacements": [
+                    {
+                      "deletedRegion": {
+                        "charOffset": 421,
+                        "charLength": 21
+                      },
+                      "insertedContent": {
+                        "text": "https://www.apache.org"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "DevSkimSeverity": "Moderate",
+            "DevSkimConfidence": "High",
+            "tags": [
+              "ThreatModel.Integration.HTTP"
+            ]
+          }
+        },
+        {
+          "ruleId": "glog-f1955b9c-2274-4649-930d-e17f7450e6e0",
+          "kind": "fail",
+          "level": "warning",
+          "message": {
+            "text": "Unsecured Web Address"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/operator/contrib/adgrad_update_op.cc"
+                },
+                "region": {
+                  "startLine": 57,
+                  "startColumn": 17,
+                  "endLine": 57,
+                  "endColumn": 36,
+                  "charOffset": 2032,
+                  "charLength": 19,
+                  "snippet": {
+                    "text": "http://www.jmlr.org",
+                    "rendered": {
+                      "text": "http://www.jmlr.org",
+                      "markdown": "`http://www.jmlr.org`"
+                    }
+                  },
+                  "sourceLanguage": "cpp"
+                }
+              }
+            }
+          ],
+          "fixes": [
+            {
+              "description": {
+                "text": "An HTTP-based URL without TLS was detected."
+              },
+              "artifactChanges": [
+                {
+                  "artifactLocation": {
+                    "uri": "src/operator/contrib/adgrad_update_op.cc"
+                  },
+                  "replacements": [
+                    {
+                      "deletedRegion": {
+                        "charOffset": 2032,
+                        "charLength": 19
+                      },
+                      "insertedContent": {
+                        "text": "https://www.jmlr.org"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "DevSkimSeverity": "Moderate",
+            "DevSkimConfidence": "High",
+            "tags": [
+              "ThreatModel.Integration.HTTP"
+            ]
+          }
+        },
+        {
+          "ruleId": "glog-95127da1-58c5-46fa-a81f-4a58defa1938",
+          "kind": "fail",
+          "level": "error",
+          "message": {
+            "text": "\"Avoid Using Weak or Non-Cryptographic Random Number Generators\""
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "include/mxnet/random_generator.h"
+                },
+                "region": {
+                  "startLine": 196,
+                  "startColumn": 40,
+                  "endLine": 196,
+                  "endColumn": 45,
+                  "charOffset": 6242,
+                  "charLength": 5,
+                  "snippet": {
+                    "text": "rand(",
+                    "rendered": {
+                      "text": "rand(",
+                      "markdown": "`rand(`"
+                    }
+                  },
+                  "sourceLanguage": "c"
+                }
+              }
+            }
+          ],
+          "properties": {
+            "DevSkimSeverity": "Important",
+            "DevSkimConfidence": "High",
+            "tags": [
+              "Cryptography.PRNG.Weak"
+            ]
+          }
+        }
+      ],
+      "newlineSequences": [
+        "\r\n",
+        "\n"
+      ]
+    }
+  ]
+}
